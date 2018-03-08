@@ -1,3 +1,15 @@
+/* ************************************************************************** */
+/*                                                                            */
+/*                                                        :::      ::::::::   */
+/*   computertoken.h                                    :+:      :+:    :+:   */
+/*                                                    +:+ +:+         +:+     */
+/*   By: fxst1 <fxst1@student.42.fr>                +#+  +:+       +#+        */
+/*                                                +#+#+#+#+#+   +#+           */
+/*   Created: 2018/03/08 13:52:59 by fxst1             #+#    #+#             */
+/*   Updated: 2018/03/08 14:13:27 by fxst1            ###   ########.fr       */
+/*                                                                            */
+/* ************************************************************************** */
+
 #ifndef COMPUTERTOKEN_HPP
 # define COMPUTERTOKEN_HPP
 # include <vector>
@@ -6,7 +18,7 @@
 # define RegexSign "([+-]*)"
 # define RegexFactor "([0-9]+(.[0-9]+)*)"
 # define RegexPower "(\\*(\\s*)X?(\\s*)^(\\s*)[0-3])"
-# define RegexExpr "\\s*[+-]?\\s*(([0-9]+))?\\s*([*]?\\s*X\\s*\\^\\s*[0-2])?"
+# define RegexExpr "\\s*(([0-9]+))?\\s*([*]?\\s*X\\s*(\\^\\s*[0-2])?)?"
 
 namespace		fx::computer
 {

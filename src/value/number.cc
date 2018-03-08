@@ -1,27 +1,30 @@
 /* ************************************************************************** */
 /*                                                                            */
 /*                                                        :::      ::::::::   */
-/*   parser.cc                                          :+:      :+:    :+:   */
+/*   number.cc                                          :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
 /*   By: fxst1 <fxst1@student.42.fr>                +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
-/*   Created: 2018/03/08 13:53:21 by fxst1             #+#    #+#             */
-/*   Updated: 2018/03/08 13:53:22 by fxst1            ###   ########.fr       */
+/*   Created: 2018/03/08 13:52:03 by fxst1             #+#    #+#             */
+/*   Updated: 2018/03/08 13:55:28 by fxst1            ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
-#include <computer.h>
+#include <value.h>
 
-using namespace fx::computer;
+using namespace	fx::computer;
 
-ComputerParser::ComputerParser(void):
-	Parser<fx::computer::Value*, fx::computer::Computer&>()
+Value			Value::number_minus(void)
 {
-	//Operators
-	this->_g_symbols.push_back( new OperatorEqual() );
-	this->_g_symbols.push_back( new OperatorPlus() );
-	this->_g_symbols.push_back( new OperatorMinus() );
+	return (Value(-this->getRe(), -this->getIm()));
+}
 
-	//Initializer
-	this->_g_symbols.push_back( new ComputerExpr() );
+Value			Value::number_plus(const Value& v)
+{
+	return (Value(this->getRe() + v.getRe(), this->getIm() - v.getIm()));
+}
+
+Value			Value::number_minus(const Value& v)
+{
+	return (Value(this->getRe() - v.getRe(), this->getIm() - v.getIm()));
 }

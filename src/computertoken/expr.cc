@@ -46,6 +46,7 @@ ComputerToken	*ComputerExpr::clone(const char *s)
 
 void			ComputerExpr::parseString(const char *s)
 {
+	std::cout << s << std::endl;
 	while (isspace(*s))
 		s++;
 	if (*s == '+')
