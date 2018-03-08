@@ -6,7 +6,7 @@
 /*   By: fxst1 <fxst1@student.42.fr>                +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2018/03/08 13:52:38 by fxst1             #+#    #+#             */
-/*   Updated: 2018/03/08 14:38:49 by fxst1            ###   ########.fr       */
+/*   Updated: 2018/03/08 16:44:34 by fxst1            ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -18,13 +18,15 @@ Value			Value::polynome_minus(void)
 {
 	Value					*tmp = nullptr;
 	Value					p = Value(*this);
-	std::vector<Value*>&	v = p.getEq();
+	std::vector<Value*>		v = p.getEq();
 
-	for (auto it = v.begin(); it != v.end(); it++)
-	{
-		tmp = (*it);
-		*tmp = -(*tmp);
-	}
+	this->preparePolynome();
+	if (this->_is_polynome)
+		for (size_t i = 0; i < MAX_DEGREE; i++)
+		{
+			tmp = p._data._eq[i];
+			*tmp = -(*tmp);
+		}
 	return (p);
 }
 
@@ -33,35 +35,56 @@ Value			Value::polynome_plus(const Value& right)
 	Value					*tmp = nullptr;
 	Value					p = Value(*this);
 
+	p.preparePolynome();
 	if (right.isPolynome())
 	{
-		p.resize();
-		for (auto	it = p._data._eq.begin();
-					it != p._data._eq.end();
-					it++)
+		for (size_t i = 0; i < MAX_DEGREE; i++)
 		{
-			tmp = *it;
-			*tmp = -(*tmp);
+			tmp = p._data._eq[i];
+			*tmp = (*tmp) + (*right._data._eq[i]);
 		}
 	}
 	else
 	{
-
+		tmp = p._data._eq[0];
+		*tmp = (*tmp) + (*right._data._eq[0]);
 	}
 	return (p);
 }
 
-Value			Value::polynome_minus(const Value& v)
+Value			Value::polynome_minus(const Value& right)
 {
-	(void)v;
-	return (Value());
+	Value					*tmp = nullptr;
+	Value					p = Value(*this);
+
+	p.preparePolynome();
+	if (right.isPolynome())
+	{
+		for (size_t i = 0; i < MAX_DEGREE; i++)
+		{
+			tmp = p._data._eq[i];
+			*tmp = (*tmp) - (*right._data._eq[i]);
+		}
+	}
+	else
+	{
+		tmp = p._data._eq[0];
+		*tmp = (*tmp) - (*right._data._eq[0]);
+	}
+	return (p);
 }
 
-void 			Value::resize(size_t n)
+void 			Value::preparePolynome(void)
 {
+	Value		*tmp = nullptr;
+
 	if (this->_is_polynome)
 	{
-		this->_data.
-
+		for (size_t i = 0; i < MAX_DEGREE; i++)
+		{
+			tmp = this->_data._eq[i];
+			if (!tmp)
+				this->_data._eq[i] = new Value(0, 0);
+		}
 	}
 }

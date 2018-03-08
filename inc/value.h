@@ -6,7 +6,7 @@
 /*   By: fxst1 <fxst1@student.42.fr>                +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2018/03/08 13:52:52 by fxst1             #+#    #+#             */
-/*   Updated: 2018/03/08 14:41:26 by fxst1            ###   ########.fr       */
+/*   Updated: 2018/03/08 17:04:18 by fxst1            ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -15,7 +15,7 @@
 # include <string>
 # include <vector>
 # include <string.h>
-
+# define	MAX_DEGREE 3
 namespace	fx::computer{
 
 	class					Value;
@@ -57,6 +57,12 @@ namespace	fx::computer{
 			double					getIm(void) const;
 			std::vector<Value*>		getEq(void) const;
 
+			void					setRe(double re);
+			void					setIm(double im);
+			void					setEq(std::vector<Value*> eq);
+
+			bool					isPolynome(void) const;
+			bool					isNumber(void) const;
 
 			virtual std::string		toString(void) const;
 			virtual Value			*clone(void) const;
@@ -74,8 +80,7 @@ namespace	fx::computer{
 			Value					polynome_plus(const Value& v);
 			Value					polynome_minus(const Value& v);
 
-			void 					resize(size_t n);
-
+			void 					preparePolynome(void);
 	};
 
 };

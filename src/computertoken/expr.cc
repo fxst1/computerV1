@@ -5,7 +5,8 @@ using namespace	fx::computer;
 
 ComputerExpr::ComputerExpr(std::string expr):
 	ComputerToken(RegexExpr, 0, true),
-	_factor(1),
+	_prefix(true),
+	_factor(1, 0),
 	_power(0),
 	_neg(0)
 {
@@ -14,6 +15,7 @@ ComputerExpr::ComputerExpr(std::string expr):
 
 ComputerExpr::ComputerExpr(const ComputerToken& m, const char *s):
 	ComputerToken(m),
+	_prefix(true),
 	_factor(((const ComputerExpr&)m)._factor),
 	_power(((const ComputerExpr&)m)._power),
 	_neg(((const ComputerExpr&)m)._neg)
@@ -23,6 +25,15 @@ ComputerExpr::ComputerExpr(const ComputerToken& m, const char *s):
 
 ComputerToken	*ComputerExpr::nud(ComputerParserBase& parser, Computer& data)
 {
+	this->_prefix = false;
+	return (this);
+	(void)parser;
+	(void)data;
+}
+
+ComputerToken	*ComputerExpr::led(ComputerParserBase& parser, ComputerToken *left, Computer& data)
+{
+	this->push_back(left);
 	return (this);
 	(void)parser;
 	(void)data;
@@ -30,6 +41,14 @@ ComputerToken	*ComputerExpr::nud(ComputerParserBase& parser, Computer& data)
 
 Value			*ComputerExpr::execute(Computer& data)
 {
+	Value		*v;
+
+	if (this->_prefix == false)
+	{
+		data.setMember(this->_factor, this->_power);
+		return (data.getMember(this->_power));
+	}
+	v = this->get(0)->execute(data);
 	data.setMember(this->_factor, this->_power);
 	return (data.getMember(this->_power));
 }
@@ -46,7 +65,6 @@ ComputerToken	*ComputerExpr::clone(const char *s)
 
 void			ComputerExpr::parseString(const char *s)
 {
-	std::cout << s << std::endl;
 	while (isspace(*s))
 		s++;
 	if (*s == '+')
@@ -61,7 +79,11 @@ void			ComputerExpr::parseString(const char *s)
 		s++;
 
 	if (*s <= '9' && *s >= '0')
-		this->_factor = Value(this->_neg ? -atoi(s) : atoi(s));
+	{
+		std::cout << s << std::endl;
+		this->_factor.setRe(this->_neg ? -atoi(s) : atoi(s));
+		std::cout << this->_factor.toString() << std::endl;
+	}
 	while (*s <= '9' && *s >= '0')
 		s++;
 

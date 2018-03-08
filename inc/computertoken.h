@@ -6,7 +6,7 @@
 /*   By: fxst1 <fxst1@student.42.fr>                +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2018/03/08 13:52:59 by fxst1             #+#    #+#             */
-/*   Updated: 2018/03/08 14:13:27 by fxst1            ###   ########.fr       */
+/*   Updated: 2018/03/08 17:15:36 by fxst1            ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -15,10 +15,7 @@
 # include <vector>
 # include <string>
 # include <cstdlib>
-# define RegexSign "([+-]*)"
-# define RegexFactor "([0-9]+(.[0-9]+)*)"
-# define RegexPower "(\\*(\\s*)X?(\\s*)^(\\s*)[0-3])"
-# define RegexExpr "\\s*(([0-9]+))?\\s*([*]?\\s*X\\s*(\\^\\s*[0-2])?)?"
+# define RegexExpr "\\s*([+-]?\\s*[0-9]+)?\\s*([*]?\\s*X\\s*(\\^\\s*[0-2])?)?"
 
 namespace		fx::computer
 {
@@ -26,6 +23,7 @@ namespace		fx::computer
 
 	class		ComputerExpr: public ComputerToken
 	{
+		bool	_prefix;
 		Value	_factor;
 		int		_power;
 		int		_neg;
@@ -36,6 +34,7 @@ namespace		fx::computer
 			ComputerExpr(const ComputerToken& m, const char *s);
 
 			ComputerToken	*nud(ComputerParserBase& parser, Computer& data);
+			ComputerToken	*led(ComputerParserBase& parser, ComputerToken *left, Computer& data);
 			Value			*execute(Computer& data);
 			std::string		toString() const;
 			ComputerToken	*clone(const char *s);

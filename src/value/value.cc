@@ -6,11 +6,12 @@
 /*   By: fxst1 <fxst1@student.42.fr>                +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2018/03/07 17:34:13 by fxst1             #+#    #+#             */
-/*   Updated: 2018/03/08 14:09:07 by fxst1            ###   ########.fr       */
+/*   Updated: 2018/03/08 17:04:17 by fxst1            ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include <value.h>
+#include <iostream>
 
 using namespace	fx::computer;
 
@@ -18,12 +19,14 @@ Value::Value(void):
 	_is_polynome(false)
 {
 	bzero(&this->_data, sizeof(this->_data));
+	std::cout << "DEF" << std::endl;
 }
 
 Value::Value(bool is_polynome):
 	_is_polynome(is_polynome)
 {
 	bzero(&this->_data, sizeof(this->_data));
+	std::cout << "BOOL" << std::endl;
 }
 
 Value::Value(double re, double im):
@@ -32,6 +35,7 @@ Value::Value(double re, double im):
 	bzero(&this->_data, sizeof(this->_data));
 	this->_data._num._re = re;
 	this->_data._num._re = im;
+	std::cout << "NUMBER" << std::endl;
 }
 
 Value::Value(std::vector<Value*> eq):
@@ -42,6 +46,7 @@ Value::Value(std::vector<Value*> eq):
 
 	for (auto it = eq.begin(); it != eq.end(); it++)
 		this->_data._eq.push_back( (*it)->clone() );
+	std::cout << "POLYNOME" << std::endl;
 }
 
 Value::~Value(void)
@@ -56,7 +61,9 @@ Value::~Value(void)
 
 std::string	Value::toString(void) const{
 
-	if (this->_is_polynome)
+	std::string			s = "";
+
+	if (this->isNumber())
 	{
 		if (this->getIm())
 		{
@@ -67,7 +74,20 @@ std::string	Value::toString(void) const{
 		return (std::to_string(this->getRe()));
 	}
 	else
-		return ("polynome");
+	{
+		for (size_t i = 0; i < MAX_DEGREE; i++)
+		{
+			if (i > 0)
+				s += " ";
+			if (i < this->_data._eq.size())
+				s += this->_data._eq[i]->toString();
+			else
+				s += "0";
+			if (i > 0)
+				s += " X^" + std::to_string(i);
+		}
+	}
+	return (s);
 }
 
 Value		Value::pow(const Value& v){
@@ -104,20 +124,39 @@ Value		Value::operator=(const Value& v){
 	return (*this);
 }
 
-Value		*Value::clone(void) const{
+Value		*Value::clone(void) const {
 	if (this->_is_polynome)
 		return (new Value(this->getEq()));
 	return (new Value(this->getRe(), this->getIm()));
 }
 
-double		Value::getRe(void) const{
+double		Value::getRe(void) const {
 	return (this->_data._num._re);
 }
 
-double		Value::getIm(void) const{
+double		Value::getIm(void) const {
 	return (this->_data._num._im);
 }
 
-std::vector<Value*>		Value::getEq(void) const{
+std::vector<Value*>		Value::getEq(void) const {
 	return (this->_data._eq);
+}
+
+void		Value::setRe(double re){
+	this->_data._num._re = re;
+}
+
+void		Value::setIm(double im){
+	this->_data._num._im = im;
+}
+void		Value::setEq(std::vector<Value*> eq){
+	this->_data._eq = eq;
+}
+
+bool		Value::isPolynome(void) const {
+	return (this->_is_polynome == true);
+}
+
+bool		Value::isNumber(void) const {
+	return (this->_is_polynome == false);
 }

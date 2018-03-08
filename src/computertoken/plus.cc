@@ -6,7 +6,7 @@
 /*   By: fxst1 <fxst1@student.42.fr>                +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2018/03/08 13:53:13 by fxst1             #+#    #+#             */
-/*   Updated: 2018/03/08 14:09:39 by fxst1            ###   ########.fr       */
+/*   Updated: 2018/03/08 16:14:16 by fxst1            ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -16,7 +16,7 @@
 using namespace		fx::computer;
 
 OperatorPlus::OperatorPlus():
-	ComputerToken("+", 140, true),
+	ComputerToken("+", 140),
 	_prefix(false)
 {}
 
