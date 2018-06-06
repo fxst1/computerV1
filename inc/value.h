@@ -6,7 +6,7 @@
 /*   By: fxst1 <fxst1@student.42.fr>                +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2018/03/08 13:52:52 by fxst1             #+#    #+#             */
-/*   Updated: 2018/03/08 17:04:18 by fxst1            ###   ########.fr       */
+/*   Updated: 2018/06/06 14:10:23 by fjacquem         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -84,5 +84,8 @@ namespace	fx::computer{
 	};
 
 };
+
+std::ostream					&operator<<(std::ostream &o, const fx::computer::Value& v);
+
 
 #endif

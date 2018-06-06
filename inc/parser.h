@@ -32,7 +32,7 @@ namespace		fx
 
 	class		ParserIdBase
 	{
-		public :
+		public:
 
 			virtual				~ParserIdBase()
 			{}
@@ -353,12 +353,12 @@ namespace		fx
 					std::cerr << "Exception: " << str << "\n";
 			}
 
-			~ParserBaseException()
+			~ParserBaseException() throw()
 			{
 
 			}
 
-			const char		*what() const noexcept
+			const char		*what() const throw()
 			{
 				return (this->s.c_str());
 			}
@@ -445,7 +445,7 @@ namespace		fx
 	template<typename T, typename S>
 	class		ParserTokenBase
 	{
-		public :
+		public:
 
 			const static int		UseGlobal = 0;
 			const static int		UseLedOnly = 1;
@@ -793,7 +793,7 @@ namespace		fx
 
 			bool									operator==(const ParserTokenBase<T,S>* ref)
 			{
-				return (this->_id == ref._id);
+				return (this->_id == ref->_id);
 			}
 
 			virtual T								execute(S data)
@@ -820,7 +820,7 @@ namespace		fx
 				return (this->_id->toString());
 			}
 
-		protected :
+		protected:
 
 			ParserIdBase*							_id;
 			int										_priority;
@@ -828,7 +828,7 @@ namespace		fx
 			int										_request;
 			bool									_temp;
 
-		private :
+		private:
 
 			bool									_alloc_d;
 			std::list<ParserTokenBase<T,S>*>		_nodes;
@@ -1146,7 +1146,7 @@ namespace		fx
 	template<typename T, typename S>
 	class		ParserBase
 	{
-		public :
+		public:
 
 			int				_line;
 			int				_col;
@@ -1310,9 +1310,6 @@ namespace		fx
 				this->_root = this->expression(data);
 				if (this->_root)
 				{
-					//std::cout << "================" << std::endl;
-					//this->_root->debug();
-					//std::cout << "================" << std::endl;
 					if (this->it != this->_tokens.end())
 						throw ParserBaseException<T,S> ("Cannot parse `" + (*this->it)->toString() + "`", this);
 					return (this->_root->execute( data ));

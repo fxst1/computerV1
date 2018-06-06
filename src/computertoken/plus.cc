@@ -6,7 +6,7 @@
 /*   By: fxst1 <fxst1@student.42.fr>                +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2018/03/08 13:53:13 by fxst1             #+#    #+#             */
-/*   Updated: 2018/03/08 16:14:16 by fxst1            ###   ########.fr       */
+/*   Updated: 2018/06/06 14:58:41 by fjacquem         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -49,7 +49,7 @@ Value				*OperatorPlus::execute(Computer& data)
 	Value			*b = nullptr;
 	Value			tmp = Value();
 
-	if (this->_prefix)
+	if (!this->_prefix)
 	{
 		b = this->get(1)->execute(data);
 		tmp = (*a) + (*b);
@@ -58,6 +58,22 @@ Value				*OperatorPlus::execute(Computer& data)
 	return (data.allocdVar( a->clone() ));
 }
 
+/*
+Value				*OperatorPlus::execute(Computer& data)
+{
+	Value			*a = this->get(0)->execute(data);
+	Value			*b = nullptr;
+	Value			tmp = Value();
+
+	if (this->_prefix)
+	{
+		b = this->get(1)->execute(data);
+		tmp = (*a) + (*b);
+		return (data.allocdVar( tmp.clone() ));
+	}
+	return (data.allocdVar( a->clone() ));
+}
+*/
 ComputerToken*		OperatorPlus::clone(const char *s)
 {
 	return (new OperatorPlus(*this, s));

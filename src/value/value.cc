@@ -6,7 +6,7 @@
 /*   By: fxst1 <fxst1@student.42.fr>                +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2018/03/07 17:34:13 by fxst1             #+#    #+#             */
-/*   Updated: 2018/03/08 17:04:17 by fxst1            ###   ########.fr       */
+/*   Updated: 2018/06/06 14:52:25 by fjacquem         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -19,14 +19,14 @@ Value::Value(void):
 	_is_polynome(false)
 {
 	bzero(&this->_data, sizeof(this->_data));
-	std::cout << "DEF" << std::endl;
+//	std::cout << "DEF" << std::endl;
 }
 
 Value::Value(bool is_polynome):
 	_is_polynome(is_polynome)
 {
 	bzero(&this->_data, sizeof(this->_data));
-	std::cout << "BOOL" << std::endl;
+//	std::cout << "BOOL" << std::endl;
 }
 
 Value::Value(double re, double im):
@@ -35,7 +35,7 @@ Value::Value(double re, double im):
 	bzero(&this->_data, sizeof(this->_data));
 	this->_data._num._re = re;
 	this->_data._num._re = im;
-	std::cout << "NUMBER" << std::endl;
+//	std::cout << "NUMBER" << std::endl;
 }
 
 Value::Value(std::vector<Value*> eq):
@@ -46,7 +46,7 @@ Value::Value(std::vector<Value*> eq):
 
 	for (auto it = eq.begin(); it != eq.end(); it++)
 		this->_data._eq.push_back( (*it)->clone() );
-	std::cout << "POLYNOME" << std::endl;
+//	std::cout << "POLYNOME" << std::endl;
 }
 
 Value::~Value(void)
@@ -159,4 +159,10 @@ bool		Value::isPolynome(void) const {
 
 bool		Value::isNumber(void) const {
 	return (this->_is_polynome == false);
+}
+
+std::ostream					&operator<<(std::ostream &o, const Value& v)
+{
+	o << v.toString();
+	return (o);
 }

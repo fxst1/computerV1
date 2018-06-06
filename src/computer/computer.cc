@@ -6,7 +6,7 @@
 /*   By: fxst1 <fxst1@student.42.fr>                +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2018/03/08 13:53:10 by fxst1             #+#    #+#             */
-/*   Updated: 2018/03/08 16:51:12 by fxst1            ###   ########.fr       */
+/*   Updated: 2018/06/06 14:52:55 by fjacquem         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -57,10 +57,9 @@ bool					Computer::executeCode(const std::string& s)
 	catch (const std::regex_error& e)
 	{
 		std::cout << "regex_error caught: " << e.what() << '\n';
-        if (e.code() == std::regex_constants::error_brack) {
+        if (e.code() == std::regex_constants::error_brack)
             std::cout << "The code was error_brack\n";
-        }
-		return (0);
+			return (0);
 	}
 	catch (ComputerNoticeException& e)
 	{

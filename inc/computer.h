@@ -6,7 +6,7 @@
 /*   By: fxst1 <fxst1@student.42.fr>                +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2018/03/08 13:53:06 by fxst1             #+#    #+#             */
-/*   Updated: 2018/03/08 13:53:07 by fxst1            ###   ########.fr       */
+/*   Updated: 2018/06/06 13:31:47 by fjacquem         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -38,6 +38,13 @@ namespace						fx::computer
 		public:
 
 			ComputerParser(void);
+
+			void 			reduceForm(void);
+
+		private:
+
+			void			reduceFormToken(ComputerToken *tok);
+
 	};
 
 	class	Computer

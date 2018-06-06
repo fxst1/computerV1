@@ -1,7 +1,7 @@
-CC=g++
+CC=clang++
 FILEEXT = cc
 INC = -I ./inc/ -I .
-FLAGS=-Wall -Wextra -g
+FLAGS=-Wall -Wextra -g --std=c++1z
 OBJDIR := ./obj/
 SRC := $(filter %.$(FILEEXT), $(shell find src -type f))
 OBJ = $(addprefix $(OBJDIR),$(SRC:.$(FILEEXT)=.o))

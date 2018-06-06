@@ -65,6 +65,8 @@ ComputerToken	*ComputerExpr::clone(const char *s)
 
 void			ComputerExpr::parseString(const char *s)
 {
+	bool		factor_init = false;
+
 	while (isspace(*s))
 		s++;
 	if (*s == '+')
@@ -80,9 +82,8 @@ void			ComputerExpr::parseString(const char *s)
 
 	if (*s <= '9' && *s >= '0')
 	{
-		std::cout << s << std::endl;
+		factor_init = true;
 		this->_factor.setRe(this->_neg ? -atoi(s) : atoi(s));
-		std::cout << this->_factor.toString() << std::endl;
 	}
 	while (*s <= '9' && *s >= '0')
 		s++;
@@ -100,15 +101,24 @@ void			ComputerExpr::parseString(const char *s)
 	{
 		s++;
 
+		if (!factor_init)
+			this->_factor.setRe(this->_neg ? -1 : 1);
+
 		while (isspace(*s))
 			s++;
 
 		if (*s == '^')
+		{
 			s++;
 
-		while (isspace(*s))
-			s++;
+			while (isspace(*s))
+				s++;
 
-		this->_power = atoi(s);
+			this->_power = atoi(s);
+		}
+		else
+			this->_power = 1;
 	}
+	else
+		this->_power = 0;
 }
