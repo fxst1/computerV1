@@ -21,7 +21,7 @@ clean:
 		@rm -vrf $(OBJDIR)
 
 fclean:
-		@rm -vf $(NAME)
+		@rm -vf $(TARGET)
 		@rm -vrf $(OBJDIR)
 
 re: fclean all
