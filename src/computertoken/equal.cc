@@ -18,10 +18,14 @@ std::string			OperatorEqual::toString() const
 
 Value				*OperatorEqual::execute(Computer& data)
 {
-	Value			*a = this->get(0)->execute(data);
+	Value			*a = nullptr;
+	Value			*b = nullptr;this->get(0)->execute(data);
+	Value			tmp;
 
-	data._sign = -1;
-	return (a);
+	a = this->get(0)->execute(data);
+	b = this->get(1)->execute(data);
+	tmp = (*a) - (*b);
+	return (data.allocdVar( tmp.clone() ));
 }
 
 ComputerToken*		OperatorEqual::clone(const char *s)

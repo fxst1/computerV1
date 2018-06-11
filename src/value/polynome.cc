@@ -16,75 +16,50 @@ using namespace	fx::computer;
 
 Value			Value::polynome_minus(void)
 {
-	Value					*tmp = nullptr;
-	Value					p = Value(*this);
-	std::vector<Value*>		v = p.getEq();
+	Value					p(*this);
 
-	this->preparePolynome();
-	if (this->_is_polynome)
-		for (size_t i = 0; i < MAX_DEGREE; i++)
-		{
-			tmp = p._data._eq[i];
-			*tmp = -(*tmp);
-		}
+	for (size_t i = 0; i < MAX_DEGREE; i++)
+		p._eq[i] = {-p._eq[i]._re, -p._eq[i]._im};
 	return (p);
 }
 
 Value			Value::polynome_plus(const Value& right)
 {
-	Value					*tmp = nullptr;
 	Value					p = Value(*this);
 
-	p.preparePolynome();
 	if (right.isPolynome())
 	{
 		for (size_t i = 0; i < MAX_DEGREE; i++)
 		{
-			tmp = p._data._eq[i];
-			*tmp = (*tmp) + (*right._data._eq[i]);
+			complex_t 	&tmp = p._eq[i];
+			p._eq[i] = {tmp._re + right._eq[i]._re, tmp._im + right._eq[i]._im};
 		}
 	}
 	else
 	{
-		tmp = p._data._eq[0];
-		*tmp = (*tmp) + (*right._data._eq[0]);
+		complex_t 	&tmp = p._eq[0];
+		p._eq[0] = {tmp._re + right._num._re, tmp._im + right._num._im};
 	}
 	return (p);
 }
 
 Value			Value::polynome_minus(const Value& right)
 {
-	Value					*tmp = nullptr;
 	Value					p = Value(*this);
 
-	p.preparePolynome();
 	if (right.isPolynome())
 	{
 		for (size_t i = 0; i < MAX_DEGREE; i++)
 		{
-			tmp = p._data._eq[i];
-			*tmp = (*tmp) - (*right._data._eq[i]);
+			complex_t 	&tmp = p._eq[i];
+			p._eq[i] = {tmp._re - right._eq[i]._re, tmp._im - right._eq[i]._im};
+
 		}
 	}
 	else
 	{
-		tmp = p._data._eq[0];
-		*tmp = (*tmp) - (*right._data._eq[0]);
+		complex_t 	&tmp = p._eq[0];
+		p._eq[0] = {tmp._re - right._num._re, tmp._im - right._num._im};
 	}
 	return (p);
-}
-
-void 			Value::preparePolynome(void)
-{
-	Value		*tmp = nullptr;
-
-	if (this->_is_polynome)
-	{
-		for (size_t i = 0; i < MAX_DEGREE; i++)
-		{
-			tmp = this->_data._eq[i];
-			if (!tmp)
-				this->_data._eq[i] = new Value(0, 0);
-		}
-	}
 }

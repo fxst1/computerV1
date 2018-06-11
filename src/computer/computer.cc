@@ -48,8 +48,14 @@ bool					Computer::executeCode(const std::string& s)
 	{
 		if ((end = this->parser.execute(s, *this)))
 		{
-			write(STDOUT_FILENO, "\t", 1);
-			std::cout << end->toString() << std::endl;
+			std::vector<complex_t>	solutions;
+
+			std::cout << "reduced form: " << end->toString() << " = 0" << std::endl;
+			solutions = end->solvPolynome();
+			for (auto it = solutions.begin(); it != solutions.end(); it++)
+			{
+				std::cout << std::to_string(*it) << std::endl;
+			}
 		}
 		this->parser.debug();
 		std::cout << "End" << std::endl;

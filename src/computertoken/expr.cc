@@ -38,19 +38,26 @@ ComputerToken	*ComputerExpr::led(ComputerParserBase& parser, ComputerToken *left
 	(void)parser;
 	(void)data;
 }
-
+/*
 Value			*ComputerExpr::execute(Computer& data)
 {
-	Value		*v;
-
 	if (this->_prefix == false)
 	{
 		data.setMember(this->_factor, this->_power);
 		return (data.getMember(this->_power));
 	}
-	v = this->get(0)->execute(data);
+//	v = this->get(0)->execute(data);
 	data.setMember(this->_factor, this->_power);
 	return (data.getMember(this->_power));
+}*/
+
+Value			*ComputerExpr::execute(Computer& data)
+{
+	Value		*polynome = new Value(true);
+	complex_t	c = {this->_factor.getRe(), this->_factor.getIm()};
+
+	polynome->addMember(c, this->_power);
+	return (data.allocdVar(polynome));
 }
 
 std::string		ComputerExpr::toString() const

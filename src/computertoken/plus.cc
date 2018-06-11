@@ -28,8 +28,8 @@ OperatorPlus::OperatorPlus(const ComputerToken& m, const char *s):
 std::string			OperatorPlus::toString() const
 {
 	if (this->_prefix)
-		return ("<prefix: ->");
-	return ("<infix: ->");
+		return ("<prefix: +>");
+	return ("<infix: +>");
 }
 
 ComputerToken		*OperatorPlus::nud(ComputerParserBase& parser, Computer& data)
@@ -47,12 +47,14 @@ Value				*OperatorPlus::execute(Computer& data)
 {
 	Value			*a = this->get(0)->execute(data);
 	Value			*b = nullptr;
-	Value			tmp = Value();
+	Value			tmp;
 
 	if (!this->_prefix)
 	{
 		b = this->get(1)->execute(data);
 		tmp = (*a) + (*b);
+		std::cout << a->toString() << std::endl;
+		std::cout << b->toString() << std::endl;
 		return (data.allocdVar( tmp.clone() ));
 	}
 	return (data.allocdVar( a->clone() ));

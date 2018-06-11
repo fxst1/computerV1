@@ -12,54 +12,51 @@
 
 #ifndef VALUE_H
 # define VALUE_H
+# include <iostream>
 # include <string>
 # include <vector>
 # include <string.h>
+# include <cmath>
+# include <cfloat>
+# include <limits>
 # define	MAX_DEGREE 3
 namespace	fx::computer{
 
-	class					Value;
+	typedef struct				complex
+	{
+		double					_re;
+		double					_im;
+	}							complex_t;
 
-	typedef struct			s_number{
-		double				_re;
-		double				_im;
-	}						t_number;
-
-	typedef union			u_data{
-		std::vector<Value*>	_eq;
-		t_number			_num;
-		u_data(void)
-		{
-			bzero(this, sizeof(u_data));
-		}
-		u_data(const u_data& d)
-		{
-			memcpy(this, &d, sizeof(u_data));
-		}
-		~u_data(void)
-		{}
-	}						t_data;
-
-	class	Value{
+	class							Value
+	{
 
 		bool					_is_polynome;
-		t_data					_data;
 
-		public :
+		union
+		{
+			complex_t				_eq[MAX_DEGREE];
+			complex_t				_num;
+		};
 
-			Value(void);
-			Value(bool is_polynome);
-			Value(double re, double im);
-			Value(std::vector<Value*> eq);
+		public:
+
+			Value(void);					//Default
+			Value(const Value &src);		//Copy
+			Value(bool is_polynome);		//Empty
+			Value(double re, double im);	//Complex 1
+			Value(const complex_t &num);	//Complex 2
+			Value(complex_t *eq);			//Polynome
 			virtual ~Value(void);
 
 			double					getRe(void) const;
 			double					getIm(void) const;
-			std::vector<Value*>		getEq(void) const;
+			complex_t				*getEq(void) const;
 
 			void					setRe(double re);
 			void					setIm(double im);
-			void					setEq(std::vector<Value*> eq);
+			void					setEq(complex_t* eq);
+			void					addMember(complex_t &v, int power);
 
 			bool					isPolynome(void) const;
 			bool					isNumber(void) const;
@@ -70,7 +67,7 @@ namespace	fx::computer{
 			virtual	Value			operator-(void);
 			virtual	Value			operator+(const Value& v);
 			virtual	Value			operator-(const Value& v);
-			virtual	Value			operator=(const Value& v);
+			virtual	Value			&operator=(const Value& v);
 
 			Value					number_minus(void);
 			Value					number_plus(const Value& v);
@@ -80,12 +77,19 @@ namespace	fx::computer{
 			Value					polynome_plus(const Value& v);
 			Value					polynome_minus(const Value& v);
 
-			void 					preparePolynome(void);
+			void					solvDeg2(std::vector<complex_t> &solutions) const;
+			void					solvDeg1(std::vector<complex_t> &solutions) const;
+			void					solvDeg0(std::vector<complex_t> &solutions) const;
+			std::vector<complex_t>	solvPolynome(void) const;
 	};
 
 };
 
-std::ostream					&operator<<(std::ostream &o, const fx::computer::Value& v);
+namespace std
+{
+	string						to_string(const fx::computer::complex_t &c);
+};
 
+std::ostream					&operator<<(std::ostream &o, const fx::computer::Value& v);
 
 #endif
