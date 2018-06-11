@@ -23,34 +23,27 @@ namespace						fx::computer
 {
 	class						Computer;
 
-	using ComputerParserBase = ParserBase<Value*, fx::computer::Computer&>;
-	using ComputerToken = ParserTokenBase<Value*, fx::computer::Computer&>;
-	using ComputerTokenInfix = ParserTokenBaseInfix<Value*, fx::computer::Computer&>;
-	using ComputerTokenInfixR = ParserTokenBaseInfixR<Value*, fx::computer::Computer&>;
-	using ComputerTokenPrefix = ParserTokenBasePrefix<Value*, fx::computer::Computer&>;
-	using ComputerTokenTemp = ParserTokenBaseTemp<Value*, fx::computer::Computer&>;
-	using ComputerException = ParserBaseException<Value*, fx::computer::Computer&>;
-	using ComputerAbortException = ParserBaseAbortException<Value*, fx::computer::Computer&>;
-	using ComputerNoticeException = ParserBaseNoticeException<Value*, fx::computer::Computer&>;
+	using ComputerParserBase = ParserBase<Value, Computer&>;
+	using ComputerToken = ParserTokenBase<Value, Computer&>;
+	using ComputerTokenInfix = ParserTokenBaseInfix<Value, Computer&>;
+	using ComputerTokenInfixR = ParserTokenBaseInfixR<Value, Computer&>;
+	using ComputerTokenPrefix = ParserTokenBasePrefix<Value, Computer&>;
+	using ComputerTokenTemp = ParserTokenBaseTemp<Value, Computer&>;
+	using ComputerException = ParserBaseException<Value, Computer&>;
+	using ComputerAbortException = ParserBaseAbortException<Value, Computer&>;
+	using ComputerNoticeException = ParserBaseNoticeException<Value, Computer&>;
 
-	class			ComputerParser: public ParserBase<Value*, fx::computer::Computer&>
+	class			ComputerParser: public ParserBase<Value, Computer&>
 	{
 		public:
 
 			ComputerParser(void);
-
-			void 			reduceForm(void);
-
-		private:
-
-			void			reduceFormToken(ComputerToken *tok);
-
+			bool			ok(void);
 	};
 
 	class	Computer
 	{
-		std::vector<Value*>						_polynome;
-		std::vector<Value*>						_values;
+		std::vector<Value>						_values;
 
 		public:
 
@@ -60,10 +53,8 @@ namespace						fx::computer
 			Computer(void);
 			~Computer(void);
 
-			Value					*allocdVar(Value *v);
+			Value					&allocdVar(Value &v);
 			bool					executeCode(const std::string& s);
-			void					setMember(const Value &factor, int power);
-			Value					*getMember(int power);
 	};
 
 };

@@ -43,19 +43,26 @@ ComputerToken		*OperatorMinus::led(ComputerParserBase& parser,ComputerToken *lef
 	return (this->helperLed(parser, left, data));
 }
 
-Value				*OperatorMinus::execute(Computer& data)
+Value				OperatorMinus::execute(Computer& data)
 {
-	Value			*a = this->get(0)->execute(data);
-	Value			*b = nullptr;
-	Value			tmp = Value();
+	Value			a;
+	Value			b;
+	Value			tmp;
+
+	if (!this->get(0))
+		throw ComputerAbortException("Missing operand before `-`");
+	a = this->get(0)->execute(data);
 
 	if (!this->_prefix)
 	{
+		if (!this->get(1))
+			throw ComputerAbortException("Missing operand after `-`");
 		b = this->get(1)->execute(data);
-		tmp = (*a) - (*b);
-		return (data.allocdVar( tmp.clone() ));
+
+		tmp = a - b;
+		return (tmp);
 	}
-	return (data.allocdVar( new Value(-(*a)) ));
+	return (-a);
 }
 
 ComputerToken*		OperatorMinus::clone(const char *s)

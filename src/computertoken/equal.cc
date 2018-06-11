@@ -4,7 +4,7 @@
 using namespace		fx::computer;
 
 OperatorEqual::OperatorEqual():
-	ParserTokenInfix<Value*, Computer&>("=", 80)
+	ComputerTokenInfix("=", 80)
 {}
 
 OperatorEqual::OperatorEqual(const ComputerTokenInfix& m, const char *s):
@@ -16,16 +16,28 @@ std::string			OperatorEqual::toString() const
 	return ("<=>");
 }
 
-Value				*OperatorEqual::execute(Computer& data)
+Value				OperatorEqual::execute(Computer& data)
 {
-	Value			*a = nullptr;
-	Value			*b = nullptr;this->get(0)->execute(data);
+	Value			a;
+	Value			b;
 	Value			tmp;
+
+
+	if (!this->get(0))
+		throw ComputerAbortException("Missing operand before `=`");
+	else if (!this->get(1))
+		throw ComputerAbortException("Missing operand after `=`");
+
+	if (data._sign != 1)
+		throw ComputerAbortException("Cannot use multiple times `=` token");
+
+	data._sign--;
 
 	a = this->get(0)->execute(data);
 	b = this->get(1)->execute(data);
-	tmp = (*a) - (*b);
-	return (data.allocdVar( tmp.clone() ));
+
+	tmp = a - b;
+	return (tmp);
 }
 
 ComputerToken*		OperatorEqual::clone(const char *s)

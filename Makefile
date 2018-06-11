@@ -5,16 +5,17 @@ FLAGS=-Wall -Wextra -g --std=c++1z
 OBJDIR := ./obj/
 SRC := $(filter %.$(FILEEXT), $(shell find src -type f))
 OBJ = $(addprefix $(OBJDIR),$(SRC:.$(FILEEXT)=.o))
-NAME = computer
+TARGET = computor
+MACRO =
 
-all: $(NAME)
+all: $(TARGET)
 
-$(NAME): $(OBJ)
-		$(CC) $(FLAGS) $(INC) -o $(NAME) $(OBJ) $(LIB)
+$(TARGET): $(OBJ)
+		$(CC) $(FLAGS) $(INC) $(MACRO) -o $(TARGET) $(OBJ) $(LIB)
 
 $(OBJDIR)%.o: %.$(FILEEXT)
 		@mkdir -p $(@D)
-		$(CC) $(FLAGS) $(INC) -c $< -o $@
+		$(CC) $(FLAGS) $(INC) $(MACRO) -c $< -o $@
 
 clean:
 		@rm -vrf $(OBJDIR)

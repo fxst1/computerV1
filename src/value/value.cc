@@ -12,6 +12,9 @@
 
 #include <value.h>
 #include <iostream>
+#include <iomanip>
+#include <sstream>
+#include <algorithm>
 
 using namespace	fx::computer;
 
@@ -36,7 +39,7 @@ Value::Value(bool is_polynome):
 		this->_num = {0, 0};
 }
 
-Value::Value(double re, double im):
+Value::Value(number_t re, number_t im):
 	_is_polynome(false),
 	_num({re, im})
 {}
@@ -55,31 +58,71 @@ Value::Value(complex_t *eq):
 Value::~Value(void)
 {}
 
-static std::string	abs2str(const double v)
+static std::string			getPrecisionString(double v)
 {
-	if (std::isnan(v))
-		return ("nan");
-	else if (v < 0)
-		return ("-" + std::to_string(-v));
-	else
-		return ("+" + std::to_string(v));
+	int				i;
+	int				j;
+	std::string		ret;
+	std::string		s = std::to_string(v);
+
+	i = s.length() - 1;
+	while (s[i] == '0' && i >= 0)
+		i--;
+
+	if (s[i] == '.')
+		i--;
+
+	j = 0;
+	while (s[j] && j <= i)
+		ret += s[j++];
+
+	return (ret);
 }
 
-std::string			std::to_string(const complex_t &c)
+static std::string	abs2str(const double v, bool addsign, bool space)
+{
+	std::stringstream	ss;
+
+	if (std::isnan(v))
+		ss << "nan";
+	else
+	{
+		if (v < 0)
+		{
+			if (space)
+				ss << "- " << getPrecisionString(-v);
+			else
+				ss << "-" << getPrecisionString(-v);
+		}
+		else
+		{
+			if (addsign)
+			{
+				if (space)
+					ss << "+ " << getPrecisionString(v);
+				else
+					ss << "+" << getPrecisionString(v);
+			}
+			else
+				ss << getPrecisionString(v);
+		}
+	}
+	return (ss.str());
+}
+
+std::string			std::to_string(const complex_t &c, bool addsign, bool space)
 {
 	if (c._im)
-		return (abs2str(c._re) + abs2str(c._im));
-	return (abs2str(c._re));
+		return (abs2str(c._re, addsign, space) + abs2str(c._im, addsign, space));
+	return (abs2str(c._re, addsign, space));
 }
 
-std::string			Value::toString(void) const{
+std::string			Value::toString(bool addsign, bool space) const{
 
 	std::string			s = "";
 
 	if (this->isNumber())
-	{
-		return (std::to_string(this->_num));
-	}
+		return (std::to_string(this->_num, addsign, space));
 	else
 	{
 		for (size_t i = 0; i < MAX_DEGREE; i++)
@@ -87,10 +130,9 @@ std::string			Value::toString(void) const{
 			if (i > 0)
 				s += " ";
 
-			s += std::to_string(this->_eq[i]);
-
-			if (i > 0)
-				s += " * X^" + std::to_string(i);
+			s += std::to_string(this->_eq[i], addsign, space);
+			s += " * X^" + std::to_string(i);
+			addsign = true;
 		}
 	}
 	return (s);
@@ -142,11 +184,11 @@ Value		*Value::clone(void) const {
 	return (new Value(this->getRe(), this->getIm()));
 }
 
-double		Value::getRe(void) const {
+number_t		Value::getRe(void) const {
 	return (this->_num._re);
 }
 
-double		Value::getIm(void) const {
+number_t		Value::getIm(void) const {
 	return (this->_num._im);
 }
 
@@ -154,11 +196,11 @@ complex_t	*Value::getEq(void) const {
 	return ((complex_t*)this->_eq);
 }
 
-void		Value::setRe(double re){
+void		Value::setRe(number_t re){
 	this->_num._re = re;
 }
 
-void		Value::setIm(double im){
+void		Value::setIm(number_t im){
 	this->_num._im = im;
 }
 void		Value::setEq(complex_t *eq){

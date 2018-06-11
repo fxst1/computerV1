@@ -15,26 +15,15 @@
 using namespace		fx::computer;
 
 Computer::Computer():
-	_polynome(std::vector<Value*>()),
-	_values(std::vector<Value*>()),
+	_values(),
 	parser(ComputerParser()),
 	_sign(1)
 {}
 
 Computer::~Computer()
-{
-	for (auto it = this->_polynome.begin();
-				it != this->_polynome.end();
-				it++)
-		delete *it;
+{}
 
-	for (auto it = this->_values.begin();
-				it != this->_values.end();
-				it++)
-		delete *it;
-}
-
-Value					*Computer::allocdVar(Value *v)
+Value					&Computer::allocdVar(Value &v)
 {
 	this->_values.push_back(v);
 	return (v);
@@ -42,23 +31,22 @@ Value					*Computer::allocdVar(Value *v)
 
 bool					Computer::executeCode(const std::string& s)
 {
-	Value				*end;
+	Value				end;
 
 	try
 	{
-		if ((end = this->parser.execute(s, *this)))
+		end = this->parser.execute(s, *this);
+		if (this->parser.ok())
 		{
 			std::vector<complex_t>	solutions;
 
-			std::cout << "reduced form: " << end->toString() << " = 0" << std::endl;
-			solutions = end->solvPolynome();
+			std::cout << "Reduced form: " << end.toString(false, true) << " = 0" << std::endl;
+			solutions = end.solvPolynome();
 			for (auto it = solutions.begin(); it != solutions.end(); it++)
 			{
-				std::cout << std::to_string(*it) << std::endl;
+				std::cout << std::to_string(*it, false, false) << std::endl;
 			}
 		}
-		this->parser.debug();
-		std::cout << "End" << std::endl;
 	}
 	catch (const std::regex_error& e)
 	{
@@ -75,26 +63,9 @@ bool					Computer::executeCode(const std::string& s)
 	{
 		return (1);
 	}
-	return (1);
-}
-
-void					Computer::setMember(const Value &factor, int power)
-{
-	size_t				i = this->_polynome.size();
-	Value				*v = nullptr;
-
-	while (i <= (size_t)power)
+	catch (std::exception& e)
 	{
-		this->_polynome.push_back( new Value() );
-		i++;
+		std::cerr << e.what() << std::endl;
 	}
-
-	v = this->_polynome[power];
-	*v = *v + factor;
-	this->_polynome[power] = v;
-}
-
-Value					*Computer::getMember(int power)
-{
-	return (this->_polynome[power]);
+	return (1);
 }

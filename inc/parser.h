@@ -1223,7 +1223,8 @@ namespace		fx
 
 			void							debug(void) const
 			{
-				this->_root->debug();
+				if (this->_root)
+					this->_root->debug();
 			}
 
 			virtual ParserTokenBase<T,S>*	expression(S data, int priority = 0)
@@ -1314,7 +1315,7 @@ namespace		fx
 						throw ParserBaseException<T,S> ("Cannot parse `" + (*this->it)->toString() + "`", this);
 					return (this->_root->execute( data ));
 				}
-				return (NULL);
+				return (T());
 			}
 
 			void							clear(void)

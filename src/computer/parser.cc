@@ -16,7 +16,7 @@
 using namespace fx::computer;
 
 ComputerParser::ComputerParser(void):
-	Parser<fx::computer::Value*, fx::computer::Computer&>()
+	Parser<fx::computer::Value, fx::computer::Computer&>()
 {
 	try
 	{
@@ -35,4 +35,9 @@ ComputerParser::ComputerParser(void):
 			std::cout << "The code was error_brack\n";
 		}
 	}
+}
+
+bool		ComputerParser::ok(void)
+{
+	return (this->_root != nullptr);
 }

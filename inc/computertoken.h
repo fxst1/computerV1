@@ -15,8 +15,10 @@
 # include <vector>
 # include <string>
 # include <cstdlib>
+# define RegexNumber "([0-9]+(.[0-9]+)?)"
 //# define RegexExpr "\\s*([+-]?\\s*[0-9]+)?\\s*([*]?\\s*X\\s*(\\^\\s*[0-2])?)?"
-# define RegexExpr "\\s*(([+-]?\\s*[0-9]+)|([+-])?)?\\s*([*]?\\s*X\\s*(\\^\\s*[0-2])?)?"
+//# define RegexExpr "\\s*(([+-]?\\s*[0-9]+)|([+-])?)?\\s*([*]?\\s*X\\s*(\\^\\s*[0-2])?)?"
+# define RegexExpr "\\s*(([+-]?\\s*" RegexNumber ")|([+-])?)?\\s*([*]?\\s*X\\s*(\\^\\s*[0-2])?)?"
 
 namespace		fx::computer
 {
@@ -36,7 +38,7 @@ namespace		fx::computer
 
 			ComputerToken	*nud(ComputerParserBase& parser, Computer& data);
 			ComputerToken	*led(ComputerParserBase& parser, ComputerToken *left, Computer& data);
-			Value			*execute(Computer& data);
+			Value			execute(Computer& data);
 			std::string		toString() const;
 			ComputerToken	*clone(const char *s);
 			void 			parseString(const char *s);
@@ -50,7 +52,7 @@ namespace		fx::computer
 			OperatorEqual(const ComputerTokenInfix& m, const char *s);
 
 			std::string			toString() const;
-			Value				*execute(Computer& data);
+			Value				execute(Computer& data);
  			ComputerToken*		clone(const char *s);
  	};
 
@@ -66,7 +68,7 @@ namespace		fx::computer
 			std::string			toString() const;
 			ComputerToken		*nud(ComputerParserBase& parser, Computer& data);
 			ComputerToken		*led(ComputerParserBase& parser, ComputerToken *left, Computer& data);
-			Value				*execute(Computer& data);
+			Value				execute(Computer& data);
  			ComputerToken*		clone(const char *s);
  	};
 
@@ -82,7 +84,7 @@ namespace		fx::computer
 			std::string			toString() const;
 			ComputerToken		*nud(ComputerParserBase& parser, Computer& data);
 			ComputerToken		*led(ComputerParserBase& parser, ComputerToken *left, Computer& data);
-			Value				*execute(Computer& data);
+			Value				execute(Computer& data);
  			ComputerToken*		clone(const char *s);
  	};
 

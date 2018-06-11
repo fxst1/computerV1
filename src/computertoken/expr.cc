@@ -38,31 +38,20 @@ ComputerToken	*ComputerExpr::led(ComputerParserBase& parser, ComputerToken *left
 	(void)parser;
 	(void)data;
 }
-/*
-Value			*ComputerExpr::execute(Computer& data)
-{
-	if (this->_prefix == false)
-	{
-		data.setMember(this->_factor, this->_power);
-		return (data.getMember(this->_power));
-	}
-//	v = this->get(0)->execute(data);
-	data.setMember(this->_factor, this->_power);
-	return (data.getMember(this->_power));
-}*/
 
-Value			*ComputerExpr::execute(Computer& data)
+Value			ComputerExpr::execute(Computer& data)
 {
-	Value		*polynome = new Value(true);
+	Value		polynome(true);
 	complex_t	c = {this->_factor.getRe(), this->_factor.getIm()};
 
-	polynome->addMember(c, this->_power);
-	return (data.allocdVar(polynome));
+	polynome.addMember(c, this->_power);
+	return (polynome);
+	(void)data;
 }
 
 std::string		ComputerExpr::toString() const
 {
-	return ("<expr=" + this->_factor.toString() + " X ^ " + std::to_string(this->_power) + ">");
+	return ("<expr=" + this->_factor.toString(false, false) + " X ^ " + std::to_string(this->_power) + ">");
 }
 
 ComputerToken	*ComputerExpr::clone(const char *s)
@@ -90,8 +79,12 @@ void			ComputerExpr::parseString(const char *s)
 	if (*s <= '9' && *s >= '0')
 	{
 		factor_init = true;
-		this->_factor.setRe(this->_neg ? -atoi(s) : atoi(s));
+		this->_factor.setRe(this->_neg ? -atof(s) : atof(s));
 	}
+	while (*s <= '9' && *s >= '0')
+		s++;
+	if (*s == '.')
+		s++;
 	while (*s <= '9' && *s >= '0')
 		s++;
 

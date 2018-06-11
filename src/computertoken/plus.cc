@@ -43,21 +43,26 @@ ComputerToken		*OperatorPlus::led(ComputerParserBase& parser,ComputerToken *left
 	return (this->helperLed(parser, left, data));
 }
 
-Value				*OperatorPlus::execute(Computer& data)
+Value				OperatorPlus::execute(Computer& data)
 {
-	Value			*a = this->get(0)->execute(data);
-	Value			*b = nullptr;
+	Value			a;
+	Value			b;
 	Value			tmp;
+
+	if (!this->get(0))
+		throw ComputerAbortException("Missing operand before `+`");
+	a = this->get(0)->execute(data);
 
 	if (!this->_prefix)
 	{
+		if (!this->get(1))
+			throw ComputerAbortException("Missing operand after `+`");
 		b = this->get(1)->execute(data);
-		tmp = (*a) + (*b);
-		std::cout << a->toString() << std::endl;
-		std::cout << b->toString() << std::endl;
-		return (data.allocdVar( tmp.clone() ));
+
+		tmp = a + b;
+		return (tmp);
 	}
-	return (data.allocdVar( a->clone() ));
+	return (a);
 }
 
 /*

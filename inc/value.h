@@ -22,6 +22,8 @@
 # define	MAX_DEGREE 3
 namespace	fx::computer{
 
+	typedef double				number_t;
+
 	typedef struct				complex
 	{
 		double					_re;
@@ -44,24 +46,24 @@ namespace	fx::computer{
 			Value(void);					//Default
 			Value(const Value &src);		//Copy
 			Value(bool is_polynome);		//Empty
-			Value(double re, double im);	//Complex 1
+			Value(number_t re, number_t im);	//Complex 1
 			Value(const complex_t &num);	//Complex 2
 			Value(complex_t *eq);			//Polynome
 			virtual ~Value(void);
 
-			double					getRe(void) const;
-			double					getIm(void) const;
+			number_t				getRe(void) const;
+			number_t				getIm(void) const;
 			complex_t				*getEq(void) const;
 
-			void					setRe(double re);
-			void					setIm(double im);
+			void					setRe(number_t re);
+			void					setIm(number_t im);
 			void					setEq(complex_t* eq);
 			void					addMember(complex_t &v, int power);
 
 			bool					isPolynome(void) const;
 			bool					isNumber(void) const;
 
-			virtual std::string		toString(void) const;
+			virtual std::string		toString(bool addsign = false, bool space = true) const;
 			virtual Value			*clone(void) const;
 			virtual	Value			pow(const Value& v);
 			virtual	Value			operator-(void);
@@ -87,7 +89,7 @@ namespace	fx::computer{
 
 namespace std
 {
-	string						to_string(const fx::computer::complex_t &c);
+	string						to_string(const fx::computer::complex_t &c, bool addsign = true, bool space = false);
 };
 
 std::ostream					&operator<<(std::ostream &o, const fx::computer::Value& v);
