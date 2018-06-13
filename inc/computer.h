@@ -6,7 +6,7 @@
 /*   By: fxst1 <fxst1@student.42.fr>                +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2018/03/08 13:53:06 by fxst1             #+#    #+#             */
-/*   Updated: 2018/06/13 13:25:01 by fxst1            ###   ########.fr       */
+/*   Updated: 2018/06/13 17:31:19 by fjacquem         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -28,6 +28,13 @@ namespace			fx::computer
 
 	class			ComputerParser: public Parser<Value, Computer&>
 	{
+		private:
+
+			ComputerExpr	_expr;
+			OperatorMinus	_minus;
+			OperatorPlus	_plus;
+			OperatorEqual	_equal;
+
 		public:
 
 			ComputerParser(void);

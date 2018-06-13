@@ -27,12 +27,13 @@ namespace		lexerparser
 	{
 		protected:
 
-			const std::string	_str;
+			std::string			_str;
 			size_t				_length;
 
 		public:
 
 			LexerId(void):
+				_str(""),
 				_length(0)
 			{}
 
@@ -46,34 +47,36 @@ namespace		lexerparser
 				_length(src._length)
 			{ *this = src; }
 
+			virtual ~LexerId(void)
+			{}
+
 			LexerId				&operator=(const LexerId& rhs)
 			{
 				this->_length = rhs._length;
 				return (*this);
 			}
 
-			virtual				~LexerId(void)
-			{}
-
-			size_t	compare(const std::string& s)
+			virtual size_t	compare(const std::string& s)
 			{
 				return (this->compare(s.c_str()));
 			}
 
-			size_t	compare(const char *s)
+			virtual size_t	compare(const char *s)
 			{
+				std::cout << "compare def" << std::endl;
+				std::cout << this->_str << std::endl;
 				if (strncmp(s, this->_str.c_str(), this->_str.length()) == 0)
 					return (this->_str.length());
 				else
 					return (0);
 			}
 
-			size_t	length(void) const
+			virtual size_t	length(void) const
 			{
 				return (this->_str.length());
 			}
 
-			std::string	getString(void) const
+			virtual std::string	getString(void) const
 			{
 				return (this->_str);
 			}
@@ -147,7 +150,7 @@ namespace		lexerparser
 
 			LexerIdRegex(const std::string &id):
 				LexerId("^" + id),
-				_id(std::regex(this->_str))
+				_id(this->_str)
 			{}
 
 			LexerIdRegex(const LexerIdRegex& id):
@@ -158,19 +161,30 @@ namespace		lexerparser
 			~LexerIdRegex(void)
 			{}
 
+			LexerIdRegex			&operator=(const LexerIdRegex& rhs)
+			{
+				LexerId::operator=(rhs);
+				this->_id = rhs._id;
+				return (*this);
+			}
+
 			size_t	compare(const std::string& s)
 			{
 				std::smatch	pieces;
+
+				std::cout << "Match with: " << this->_str << std::endl;
 
 				this->_length = 0;
 				if (std::regex_search(s, pieces, this->_id))
 				{
 					if (pieces.size() > 0)
 					{
+						std::cout << "Match!" << std::endl;
 						this->_length = pieces[0].str().length();
 						return (this->_length);
 					}
 				}
+				std::cout << "No Match" << std::endl;
 				return (this->_length);
 			}
 
@@ -195,6 +209,21 @@ namespace		lexerparser
 
 			const std::string		_error;
 
+			static std::string			getError(const std::string &type, const std::string &error, const int line)
+			{
+				std::string		ret = "";
+
+				if (type.length() > 0)
+					ret = type + ": " + error;
+				else if (type.length() > 0)
+					ret = error;
+
+				if (line > 0)
+					ret += ": " + std::to_string(line);
+
+				return (ret);
+			}
+
 		public:
 
 			ParserException(void):
@@ -218,21 +247,6 @@ namespace		lexerparser
 				(void)rhs;
 			}
 
-			static std::string			getError(const std::string &type, const std::string &error, const int line)
-			{
-				std::string		ret = "";
-
-				if (type.length() > 0)
-					ret = type + ": " + error;
-				else if (type.length() > 0)
-					ret = error;
-
-				if (line > 0)
-					ret += ": " + std::to_string(line);
-
-				return (ret);
-			}
-
 			virtual const char			*what() const throw()
 			{
 				return (this->_error.c_str());
@@ -243,26 +257,12 @@ namespace		lexerparser
 	{
 		public:
 
-			ParserNoticeException(void):
-				ParserException()
-			{}
-
-			ParserNoticeException(const ParserNoticeException &e):
-				ParserException(e)
-			{}
-
 			ParserNoticeException(const std::string &error, const int line = 0):
 				ParserException("Notice", error, line)
 			{}
 
 			virtual ~ParserNoticeException(void) throw()
 			{}
-
-			const char			*what() const throw()
-			{
-				return (ParserException::what());
-			}
-
 	};
 
 	class		ParserWarningException: public ParserException
@@ -288,41 +288,10 @@ namespace		lexerparser
 				(void)s;
 			}
 
-			ParserAbortException(const ParserAbortException &e):
-				ParserException(e)
-			{(void)e;}
-
 			virtual ~ParserAbortException(void) throw()
 			{}
 	};
 
-
-/*	class		ParserAbortException: public ParserException
-	{
-		public:
-
-			ParserAbortException(void):
-				ParserException()
-			{}
-
-			ParserAbortException(const ParserAbortException &e):
-				ParserException(e)
-			{}
-
-			ParserAbortException(const std::string &error, const int line = 0):
-				ParserException("Abort", error, line)
-			{}
-
-			virtual ~ParserAbortException(void) throw()
-			{}
-
-			const char			*what() const throw()
-			{
-				return (ParserException::what());
-			}
-
-	};
-*/
 	template<typename T, typename D>
 	class		Parser;
 
@@ -331,11 +300,12 @@ namespace		lexerparser
 	{
 		private:
 
+			bool									_alloc_d;
 			typedef std::list< LexerToken<T,D>* >	node;
 
 		protected:
 
-			LexerId									_id;
+			LexerId									*_id;
 			int										_priority;
 
 		public:
@@ -345,22 +315,26 @@ namespace		lexerparser
 
 			LexerToken(void):
 				node(),
-				_id(),
-				_priority(),
+				_alloc_d(false),
+				_id(nullptr),
+				_priority(0),
 				_line(0),
 				_col(0)
 			{}
 
 			LexerToken(const LexerToken& id):
 				node(id),
+				_alloc_d(false),
 				_id(id._id),
 				_priority(id._priority),
 				_line(id._line),
 				_col(id._col)
 			{}
 
-			LexerToken(const LexerId& id, int priority = 0):
+			//As String
+			LexerToken(LexerId *id, int priority = 0):
 				node(),
+				_alloc_d(false),
 				_id(id),
 				_priority(priority),
 				_line(0),
@@ -369,17 +343,17 @@ namespace		lexerparser
 
 			LexerToken(const std::string& id, int priority = 0, bool is_regex = false):
 				node(),
-				_id(),
+				_alloc_d(true),
+				_id(is_regex ? new LexerIdRegex(id) : new LexerId(id)),
 				_priority(priority),
 				_line(0),
 				_col(0)
-			{
-				if (is_regex)
-					this->_id = LexerIdRegex(id);
-			}
+			{}
 
-			virtual ~LexerToken()
+			virtual ~LexerToken(void)
 			{
+				if (this->_id && this->_alloc_d)
+					delete this->_id;
 				this->clear();
 			}
 
@@ -454,17 +428,23 @@ namespace		lexerparser
 
 			bool									compare(const std::string& s)
 			{
-				return (this->_id.compare(s));
+				if (this->_id)
+					return (this->_id->compare(s));
+				return (false);
 			}
 
 			bool									compare(const char *s)
 			{
-				return (this->_id.compare(s));
+				if (this->_id)
+					return (this->_id->compare(s));
+				return (false);
 			}
 
 			size_t									length(void) const
 			{
-				return (this->_id.length());
+				if (this->_id)
+					return (this->_id->length());
+				return (false);
 			}
 
 			int										getPriority() const
@@ -550,7 +530,9 @@ namespace		lexerparser
 
 			virtual std::string						toString() const
 			{
-				return (this->_id.getString());
+				if (this->_id)
+					return (this->_id->getString());
+				return ("nullptr");
 			}
 
 	};
@@ -586,7 +568,7 @@ namespace		lexerparser
 	template<typename T, typename D>
 	class		LexerTokenInfix: public LexerToken<T,D>
 	{
-		public :
+		public:
 
 			LexerTokenInfix(const LexerToken<T,D>& id):
 				LexerTokenPrefix<T,D>(id)
@@ -743,7 +725,7 @@ namespace		lexerparser
 
 
 			std::vector< LexerToken<T,D>* >							_tokens;
-			std::list< LexerToken<T,D>* >							_symbols;
+			std::list< LexerToken<T,D> >							_symbols;
 			LexerToken<T,D>*										_root;
 			typename std::vector<LexerToken<T,D>*>::iterator		_it;
 
@@ -774,9 +756,9 @@ namespace		lexerparser
 
 			virtual ~Parser<T,D>(void)
 			{
-				for (auto it = this->_symbols.begin(); it != this->_symbols.end(); it++)
-					if (*it != NULL)
-						delete (*it);
+				//for (auto it = this->_symbols.begin(); it != this->_symbols.end(); it++)
+				//	if (*it != NULL)
+				//		delete (*it);
 
 				this->_symbols.clear();
 
@@ -843,9 +825,9 @@ namespace		lexerparser
 					this->_it++;
 			}
 
-			void							useToken(LexerToken<T,D>* tok)
+			void							useToken(const LexerToken<T,D> &tok)
 			{
-				if (tok)
+				//if (tok)
 					this->_symbols.push_back( tok );
 			}
 
@@ -854,7 +836,7 @@ namespace		lexerparser
 				std::list<LexerToken<T,D>*>				lst = std::list<LexerToken<T,D>*>();
 
 				for (auto it = this->_symbols.begin(); it != this->_symbols.end(); it++)
-					lst.push_back( (*it)->clone("") );
+					lst.push_back( (*it).clone("") );
 				return (lst);
 			}
 
@@ -866,20 +848,15 @@ namespace		lexerparser
 
 			T								execute(const std::string s, D data)
 			{
-				std::cout << "Tokenize" << std::endl;
 				this->tokenize(s);
 				this->_it = this->_tokens.begin();
-				std::cout << "Expression" << std::endl;
 				this->_root = this->expression(data);
 				if (this->_root)
 				{
-					std::cout << "has root" << std::endl;
 					if (this->_it != this->_tokens.end())
 						throw ParserAbortException("Cannot parse `" + (*this->_it)->toString() + "`");
 					return (this->_root->execute( data ));
 				}
-				else
-					std::cout << "has not root" << std::endl;
 				return (T());
 			}
 
@@ -895,7 +872,6 @@ namespace		lexerparser
 
 			void							addToken(LexerToken<T,D>* tok)
 			{
-				std::cout << "ADD" << std::endl;
 				if (tok)
 					this->_tokens.push_back( tok );
 			}
@@ -906,12 +882,12 @@ namespace		lexerparser
 
 				for (auto it = this->_symbols.begin(); it != this->_symbols.end(); it++)
 				{
-					tmp = (*it)->compare(str);
+					tmp = (*it).compare(str);
 					if (tmp > 0)
 					{
-						std::string				s = std::string(str).substr(0, (*it)->length()).c_str();
+						std::string				s = std::string(str).substr(0, (*it).length()).c_str();
 						char*					stmp = (char*)s.c_str();
-						LexerToken<T,D>*	tok = (*it)->clone(s.c_str());
+						LexerToken<T,D>*	tok = (*it).clone(s.c_str());
 
 						tok->_line = this->_line;
 						tok->_col = this->_col;
@@ -927,7 +903,7 @@ namespace		lexerparser
 							stmp++;
 						}
 						this->addToken(tok);
-						return ((*it)->length());
+						return ((*it).length());
 					}
 				}
 				return (0);
@@ -939,6 +915,7 @@ namespace		lexerparser
 			{
 				if (this->_symbols.size() == 0)
 					throw ParserAbortException("No symbols");
+
 				this->_line = 1;
 				this->_col = 1;
 				while (*str)
