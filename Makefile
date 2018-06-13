@@ -1,4 +1,4 @@
-CC=g++
+CC=clang++
 FILEEXT = cc
 INC = -I ./inc/ -I .
 FLAGS=-Wall -Wextra -g --std=c++1z

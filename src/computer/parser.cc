@@ -6,7 +6,7 @@
 /*   By: fxst1 <fxst1@student.42.fr>                +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2018/03/08 13:53:21 by fxst1             #+#    #+#             */
-/*   Updated: 2018/06/06 14:13:03 by fjacquem         ###   ########.fr       */
+/*   Updated: 2018/06/13 13:46:20 by fxst1            ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -21,12 +21,12 @@ ComputerParser::ComputerParser(void):
 	try
 	{
 		//Operators
-		this->_g_symbols.push_back( new OperatorEqual() );
-		this->_g_symbols.push_back( new OperatorPlus() );
-		this->_g_symbols.push_back( new OperatorMinus() );
+		this->useToken( new OperatorEqual() );
+		this->useToken( new OperatorPlus() );
+		this->useToken( new OperatorMinus() );
 
 		//Initializer
-		this->_g_symbols.push_back( new ComputerExpr() );
+		this->useToken( new ComputerExpr() );
 	}
 	catch (const std::regex_error& e){
 		std::cout << "regex_error caught: " << e.what() << '\n';
@@ -39,5 +39,5 @@ ComputerParser::ComputerParser(void):
 
 bool		ComputerParser::ok(void)
 {
-	return (this->_root != nullptr);
+	return (this->getRoot() != nullptr);
 }

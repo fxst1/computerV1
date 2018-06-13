@@ -6,7 +6,7 @@
 /*   By: fxst1 <fxst1@student.42.fr>                +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2018/03/08 13:53:13 by fxst1             #+#    #+#             */
-/*   Updated: 2018/06/06 14:58:41 by fjacquem         ###   ########.fr       */
+/*   Updated: 2018/06/13 13:31:15 by fxst1            ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -15,7 +15,7 @@
 
 using namespace		fx::computer;
 
-OperatorPlus::OperatorPlus():
+OperatorPlus::OperatorPlus(void):
 	ComputerToken("+", 140),
 	_prefix(false)
 {}
@@ -25,7 +25,7 @@ OperatorPlus::OperatorPlus(const ComputerToken& m, const char *s):
 	_prefix(false)
 {(void)s;}
 
-std::string			OperatorPlus::toString() const
+std::string			OperatorPlus::toString(void) const
 {
 	if (this->_prefix)
 		return ("<prefix: +>");
@@ -50,13 +50,13 @@ Value				OperatorPlus::execute(Computer& data)
 	Value			tmp;
 
 	if (!this->get(0))
-		throw ComputerAbortException("Missing operand before `+`");
+		throw ParserAbortException("Missing operand before `+`");
 	a = this->get(0)->execute(data);
 
 	if (!this->_prefix)
 	{
 		if (!this->get(1))
-			throw ComputerAbortException("Missing operand after `+`");
+			throw ParserAbortException("Missing operand after `+`");
 		b = this->get(1)->execute(data);
 
 		tmp = a + b;
@@ -65,22 +65,6 @@ Value				OperatorPlus::execute(Computer& data)
 	return (a);
 }
 
-/*
-Value				*OperatorPlus::execute(Computer& data)
-{
-	Value			*a = this->get(0)->execute(data);
-	Value			*b = nullptr;
-	Value			tmp = Value();
-
-	if (this->_prefix)
-	{
-		b = this->get(1)->execute(data);
-		tmp = (*a) + (*b);
-		return (data.allocdVar( tmp.clone() ));
-	}
-	return (data.allocdVar( a->clone() ));
-}
-*/
 ComputerToken*		OperatorPlus::clone(const char *s)
 {
 	return (new OperatorPlus(*this, s));

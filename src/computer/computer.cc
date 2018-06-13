@@ -6,13 +6,14 @@
 /*   By: fxst1 <fxst1@student.42.fr>                +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2018/03/08 13:53:10 by fxst1             #+#    #+#             */
-/*   Updated: 2018/06/06 14:52:55 by fjacquem         ###   ########.fr       */
+/*   Updated: 2018/06/13 14:29:14 by fxst1            ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include <computer.h>
 
 using namespace		fx::computer;
+using namespace		lexerparser;
 
 Computer::Computer():
 	_values(),
@@ -47,6 +48,8 @@ bool					Computer::executeCode(const std::string& s)
 				std::cout << std::to_string(*it, false, false) << std::endl;
 			}
 		}
+		else
+			std::cout << "?" << std::endl;
 	}
 	catch (const std::regex_error& e)
 	{
@@ -55,17 +58,19 @@ bool					Computer::executeCode(const std::string& s)
             std::cout << "The code was error_brack\n";
 			return (0);
 	}
-	catch (ComputerNoticeException& e)
+	catch (const ParserNoticeException& e1)
 	{
+		std::cout << e1.what() << std::endl;
 		return (0);
 	}
-	catch (ComputerException& e)
+	catch (const ParserAbortException& e2)
 	{
+		std::cout << e2.what() << std::endl;
 		return (1);
 	}
-	catch (std::exception& e)
+	catch (const std::exception& e)
 	{
-		std::cerr << e.what() << std::endl;
+		std::cout << e.what() << std::endl;
 	}
 	return (1);
 }

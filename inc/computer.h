@@ -6,7 +6,7 @@
 /*   By: fxst1 <fxst1@student.42.fr>                +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2018/03/08 13:53:06 by fxst1             #+#    #+#             */
-/*   Updated: 2018/06/06 13:31:47 by fjacquem         ###   ########.fr       */
+/*   Updated: 2018/06/13 13:25:01 by fxst1            ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -15,25 +15,18 @@
 # include <stdlib.h>
 # include <unistd.h>
 # include <fcntl.h>
-# include <parser.h>
 # include <map>
-# include <value.h>
+# include "lexerparser.h"
+# include "value.h"
+# include "computertoken.h"
 
-namespace						fx::computer
+using namespace		lexerparser;
+
+namespace			fx::computer
 {
-	class						Computer;
+	class			Computer;
 
-	using ComputerParserBase = ParserBase<Value, Computer&>;
-	using ComputerToken = ParserTokenBase<Value, Computer&>;
-	using ComputerTokenInfix = ParserTokenBaseInfix<Value, Computer&>;
-	using ComputerTokenInfixR = ParserTokenBaseInfixR<Value, Computer&>;
-	using ComputerTokenPrefix = ParserTokenBasePrefix<Value, Computer&>;
-	using ComputerTokenTemp = ParserTokenBaseTemp<Value, Computer&>;
-	using ComputerException = ParserBaseException<Value, Computer&>;
-	using ComputerAbortException = ParserBaseAbortException<Value, Computer&>;
-	using ComputerNoticeException = ParserBaseNoticeException<Value, Computer&>;
-
-	class			ComputerParser: public ParserBase<Value, Computer&>
+	class			ComputerParser: public Parser<Value, Computer&>
 	{
 		public:
 
@@ -58,7 +51,5 @@ namespace						fx::computer
 	};
 
 };
-
-# include <computertoken.h>
 
 #endif

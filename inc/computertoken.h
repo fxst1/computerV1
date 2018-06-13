@@ -6,7 +6,7 @@
 /*   By: fxst1 <fxst1@student.42.fr>                +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2018/03/08 13:52:59 by fxst1             #+#    #+#             */
-/*   Updated: 2018/06/06 13:19:14 by fjacquem         ###   ########.fr       */
+/*   Updated: 2018/06/13 13:42:12 by fxst1            ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -15,16 +15,13 @@
 # include <vector>
 # include <string>
 # include <cstdlib>
+# include "computerdef.h"
 # define RegexNumber "([0-9]+(.[0-9]+)?)"
-//# define RegexExpr "\\s*([+-]?\\s*[0-9]+)?\\s*([*]?\\s*X\\s*(\\^\\s*[0-2])?)?"
-//# define RegexExpr "\\s*(([+-]?\\s*[0-9]+)|([+-])?)?\\s*([*]?\\s*X\\s*(\\^\\s*[0-2])?)?"
 # define RegexExpr "\\s*(([+-]?\\s*" RegexNumber ")|([+-])?)?\\s*([*]?\\s*X\\s*(\\^\\s*[0-2])?)?"
 
 namespace		fx::computer
 {
-	class		Computer;
-
-	class		ComputerExpr: public ComputerToken
+	class		ComputerExpr: public LexerToken<Value, Computer&>
 	{
 		bool	_prefix;
 		Value	_factor;
@@ -44,7 +41,7 @@ namespace		fx::computer
 			void 			parseString(const char *s);
 	};
 
-	class		OperatorEqual: public ComputerTokenInfix
+	class		OperatorEqual: public LexerTokenInfix<Value, Computer&>
 	{
 		public:
 
@@ -56,7 +53,7 @@ namespace		fx::computer
  			ComputerToken*		clone(const char *s);
  	};
 
-	class		OperatorMinus: public ComputerToken
+	class		OperatorMinus: public LexerToken<Value, Computer&>
 	{
 		bool	_prefix;
 
@@ -72,7 +69,7 @@ namespace		fx::computer
  			ComputerToken*		clone(const char *s);
  	};
 
-	class		OperatorPlus: public ComputerToken
+	class		OperatorPlus: public LexerToken<Value, Computer&>
 	{
 		bool	_prefix;
 

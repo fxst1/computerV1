@@ -6,7 +6,7 @@
 /*   By: fxst1 <fxst1@student.42.fr>                +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2018/03/08 13:53:24 by fxst1             #+#    #+#             */
-/*   Updated: 2018/06/06 14:58:51 by fjacquem         ###   ########.fr       */
+/*   Updated: 2018/06/13 13:49:10 by fxst1            ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -18,7 +18,7 @@ static void	usage(void)
 {
 	std::cout << "Usage : [expression]" << std::endl;
 	std::cout << "Expression is a polynome" << std::endl;
-	std::cout << "\texample: 1 + X ^ 2 + 6 * X" << std::endl;
+	std::cout << "\texample: 1 + 6 * X + X^2" << std::endl;
 }
 
 int 		main(int argc, char **argv)
