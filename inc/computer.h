@@ -6,7 +6,7 @@
 /*   By: fxst1 <fxst1@student.42.fr>                +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2018/03/08 13:53:06 by fxst1             #+#    #+#             */
-/*   Updated: 2018/06/13 17:31:19 by fjacquem         ###   ########.fr       */
+/*   Updated: 2018/06/13 22:17:58 by fxst1            ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -24,30 +24,23 @@ using namespace		lexerparser;
 
 namespace			fx::computer
 {
-	class			Computer;
-
-	class			ComputerParser: public Parser<Value, Computer&>
+	class	Computer
 	{
 		private:
 
-			ComputerExpr	_expr;
-			OperatorMinus	_minus;
-			OperatorPlus	_plus;
-			OperatorEqual	_equal;
+			class			ComputerParser: public Parser<Value, Computer&>
+			{
+				public:
+
+					ComputerParser(void);
+					bool			ok(void);
+			};
+
+			std::vector<Value>						_values;
 
 		public:
 
-			ComputerParser(void);
-			bool			ok(void);
-	};
-
-	class	Computer
-	{
-		std::vector<Value>						_values;
-
-		public:
-
-			ComputerParser							parser;
+			ComputerParser							_parser;
 			int										_sign;
 
 			Computer(void);

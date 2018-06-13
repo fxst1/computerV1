@@ -1,9 +1,9 @@
 CC=g++
 FILEEXT = cc
-INC = -I ./inc/ -I .
+INC = -I ./inc/ -I ./lexerparser/
 FLAGS=-Wall -Wextra -g --std=c++1z
 OBJDIR := ./obj/
-SRC := $(filter %.$(FILEEXT), $(shell find src -type f))
+SRC := $(filter %.$(FILEEXT), $(shell find ./src -type f) $(shell find ./lexerparser -type f))
 OBJ = $(addprefix $(OBJDIR),$(SRC:.$(FILEEXT)=.o))
 TARGET = computor
 MACRO =

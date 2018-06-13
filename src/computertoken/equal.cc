@@ -4,7 +4,7 @@
 using namespace		fx::computer;
 
 OperatorEqual::OperatorEqual():
-	ComputerTokenInfix("=", 80)
+	ComputerTokenInfix("^=", 80)
 {}
 
 OperatorEqual::OperatorEqual(const ComputerTokenInfix& m, const char *s):

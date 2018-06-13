@@ -6,7 +6,7 @@
 /*   By: fxst1 <fxst1@student.42.fr>                +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2018/03/08 13:53:13 by fxst1             #+#    #+#             */
-/*   Updated: 2018/06/13 13:31:15 by fxst1            ###   ########.fr       */
+/*   Updated: 2018/06/13 22:16:50 by fxst1            ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -16,7 +16,7 @@
 using namespace		fx::computer;
 
 OperatorPlus::OperatorPlus(void):
-	ComputerToken("+", 140),
+	ComputerToken("^\\+", 140),
 	_prefix(false)
 {}
 
@@ -35,12 +35,12 @@ std::string			OperatorPlus::toString(void) const
 ComputerToken		*OperatorPlus::nud(ComputerParserBase& parser, Computer& data)
 {
 	this->_prefix = true;
-	return (this->helperNud(parser, data));
+	return (LexerToken::helperNud(this, parser, data));
 }
 
 ComputerToken		*OperatorPlus::led(ComputerParserBase& parser,ComputerToken *left, Computer& data)
 {
-	return (this->helperLed(parser, left, data));
+	return (LexerToken::helperLed(this, parser, left, data));
 }
 
 Value				OperatorPlus::execute(Computer& data)

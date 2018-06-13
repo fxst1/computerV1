@@ -6,7 +6,7 @@
 /*   By: fxst1 <fxst1@student.42.fr>                +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2018/03/08 13:53:10 by fxst1             #+#    #+#             */
-/*   Updated: 2018/06/13 14:29:14 by fxst1            ###   ########.fr       */
+/*   Updated: 2018/06/13 21:13:50 by fxst1            ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -17,7 +17,7 @@ using namespace		lexerparser;
 
 Computer::Computer():
 	_values(),
-	parser(ComputerParser()),
+	_parser(ComputerParser()),
 	_sign(1)
 {}
 
@@ -36,8 +36,8 @@ bool					Computer::executeCode(const std::string& s)
 
 	try
 	{
-		end = this->parser.execute(s, *this);
-		if (this->parser.ok())
+		end = this->_parser.evaluate(s, *this);
+		if (this->_parser.ok())
 		{
 			std::vector<complex_t>	solutions;
 

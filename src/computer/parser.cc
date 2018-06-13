@@ -6,7 +6,7 @@
 /*   By: fxst1 <fxst1@student.42.fr>                +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2018/03/08 13:53:21 by fxst1             #+#    #+#             */
-/*   Updated: 2018/06/13 17:32:23 by fjacquem         ###   ########.fr       */
+/*   Updated: 2018/06/13 22:18:15 by fxst1            ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -15,22 +15,18 @@
 
 using namespace fx::computer;
 
-ComputerParser::ComputerParser(void):
-	Parser<fx::computer::Value, fx::computer::Computer&>(),
-	_expr(),
-	_minus(),
-	_plus(),
-	_equal()
+Computer::ComputerParser::ComputerParser(void):
+	Parser<fx::computer::Value, fx::computer::Computer&>()
 {
 	try
 	{
 		//Operators
-		this->useToken( this->_equal );
-		this->useToken( this->_plus );
-		this->useToken( this->_minus );
+		this->useToken( new OperatorEqual() );
+		this->useToken( new OperatorPlus() );
+		this->useToken( new OperatorMinus() );
 
 		//Initializer
-		this->useToken( this->_expr );
+		this->useToken( new ComputerExpr() );
 	}
 	catch (const std::regex_error& e){
 		std::cout << "regex_error caught: " << e.what() << '\n';
@@ -41,7 +37,7 @@ ComputerParser::ComputerParser(void):
 	}
 }
 
-bool		ComputerParser::ok(void)
+bool		Computer::ComputerParser::ok(void)
 {
 	return (this->getRoot() != nullptr);
 }

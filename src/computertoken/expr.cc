@@ -4,7 +4,7 @@
 using namespace	fx::computer;
 
 ComputerExpr::ComputerExpr(std::string expr):
-	ComputerToken(RegexExpr, 0, true),
+	ComputerToken(RegexExpr, 0),
 	_prefix(true),
 	_factor(1, 0),
 	_power(0),
@@ -16,9 +16,9 @@ ComputerExpr::ComputerExpr(std::string expr):
 ComputerExpr::ComputerExpr(const ComputerToken& m, const char *s):
 	ComputerToken(m),
 	_prefix(true),
-	_factor(((const ComputerExpr&)m)._factor),
-	_power(((const ComputerExpr&)m)._power),
-	_neg(((const ComputerExpr&)m)._neg)
+	_factor(1, 0),
+	_power(0),
+	_neg(0)
 {
 	this->parseString(s);
 }
